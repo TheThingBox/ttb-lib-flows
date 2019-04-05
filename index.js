@@ -103,6 +103,11 @@ LibFlows.prototype._addToFlow = function(id, label, nodes = [], configs = [], di
           label = flow.label
         }
 
+        if(nodes.findIndex(item => !item.hasOwnProperty('type')) !== -1){
+          resolve(null)
+          return
+        }
+
         var lastY = flow.nodes.filter(item => item.y).map(item => parseInt(item.y)).sort((a,b) => {
           if(a > b) { return -1 }
           if(a < b) { return 1 }
@@ -115,6 +120,10 @@ LibFlows.prototype._addToFlow = function(id, label, nodes = [], configs = [], di
         }
 
         nodes = nodes.map(item => {
+          if(!item.id){
+            item.id = LibFlows.generateNodeID()
+          }
+          item.z = id
           if(!item.hasOwnProperty('x')){
             item.x = 170
           }
@@ -122,6 +131,12 @@ LibFlows.prototype._addToFlow = function(id, label, nodes = [], configs = [], di
             lastY = lastY + 80
             item.y = lastY
           }
+          return item
+        })
+
+        configs = configs.map(item => {
+          item.z = id
+          return item
         })
 
         var _nodes = [].concat(flow.nodes, nodes).filter(item => item)
@@ -165,22 +180,8 @@ LibFlows.prototype._addToFlow = function(id, label, nodes = [], configs = [], di
           }
         }
 
-        const zid = uuid()
-        _nodes = _nodes.map(item => {
-          if(item.z){
-            item.z = zid
-          }
-          return item
-        })
-        _configs = _configs.map(item => {
-          if(item.z){
-            item.z = zid
-          }
-          return item
-        })
-
         this.locker.acquire(this.id, ()=> {
-          return axios.put(`${this.nodered.url}/flow/${id}`, { id: zid, label: label, nodes: _nodes, configs: _configs }, { headers: { 'Content-Type' : 'application/json; charset=utf-8' } })
+          return axios.put(`${this.nodered.url}/flow/${id}`, { id: id, label: label, nodes: _nodes, configs: _configs }, { headers: { 'Content-Type' : 'application/json; charset=utf-8' } })
         })
         .then(resp => {
           if(resp.data){
@@ -246,6 +247,10 @@ LibFlows.isSameNode = function(node, filter){
     }
   }
   return resp && keys.length !== 0
+}
+
+LibFlows.prototype.generateNodeID = function(){
+  return LibFlows.generateNodeID()
 }
 
 LibFlows.generateNodeID = function(){
