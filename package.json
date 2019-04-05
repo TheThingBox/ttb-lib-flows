@@ -1,0 +1,30 @@
+{
+  "name": "ttb-lib-flows",
+  "version": "0.1.0",
+  "description": "A set Nodejs lib for the Node-RED node managment",
+  "dependencies": {
+    "axios": "0.18.0",
+    "uuid": "3.3.2",
+    "async-lock": "1.2.0",
+    "random-words": "1.1.0"
+  },
+  "keywords": [
+    "thingbox",
+    "thethingbox",
+    "timesquair"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thethingbox/ttb-lib-flow.git"
+  },
+  "author": "thethingbox <thethingbox@gmail.com> (http://thethingbox.io/)",
+  "license": "http://www.wtfpl.net",
+  "bugs": {
+    "url": "https://github.com/TheThingBox/ttb-lib-flow/issues"
+  },
+  "homepage": "https://github.com/TheThingBox/ttb-lib-flow#readme"
+}
