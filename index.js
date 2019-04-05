@@ -3,7 +3,7 @@ const uuid = require('uuid/v4')
 const randomWord = require("random-words")
 const Locker = require('async-lock')
 
-var Libflows = function(options = {}){
+var LibFlows = function(options = {}){
   this.id = uuid()
   this.locker = new Locker()
 
@@ -15,7 +15,7 @@ var Libflows = function(options = {}){
   this.nodered.url = `${this.nodered.protocol}://${this.nodered.host}:${this.nodered.port}`
 }
 
-Libflows.prototype.getFlowFromNode = function(node = {}){
+LibFlows.prototype.getFlowFromNode = function(node = {}){
   if(!node || Object.keys(node).length === 0){
     return Promise.reject()
   }
@@ -29,7 +29,7 @@ Libflows.prototype.getFlowFromNode = function(node = {}){
           resp.data = JSON.parse(resp.data)
         } catch(e){}
         var flow = null
-        const nodeIndex = resp.data.findIndex(n => Libflows.isSameNode(n, node))
+        const nodeIndex = resp.data.findIndex(n => LibFlows.isSameNode(n, node))
         var flowIndex = -1
         if(nodeIndex !== -1){
           if(resp.data[nodeIndex].hasOwnProperty('z') && resp.data[nodeIndex].z){
@@ -50,7 +50,7 @@ Libflows.prototype.getFlowFromNode = function(node = {}){
   })
 }
 
-Libflows.prototype.getFlowFromId = function(id){
+LibFlows.prototype.getFlowFromId = function(id){
   if(!id){
     return Promise.reject()
   }
@@ -72,7 +72,7 @@ Libflows.prototype.getFlowFromId = function(id){
   })
 }
 
-Libflows.prototype.addToFlow = function(id, label, nodes = [], configs = [], discriminantNodeKeys = [], discriminantConfigKeys = []){
+LibFlows.prototype.addToFlow = function(id, label, nodes = [], configs = [], discriminantNodeKeys = [], discriminantConfigKeys = []){
   if(!Array.isArray(nodes)){
     nodes = [nodes]
   }
@@ -92,7 +92,7 @@ Libflows.prototype.addToFlow = function(id, label, nodes = [], configs = [], dis
   }
 }
 
-Libflows.prototype._addToFlow = function(id, label, nodes = [], configs = [], discriminantNodeKeys = [], discriminantConfigKeys = []){
+LibFlows.prototype._addToFlow = function(id, label, nodes = [], configs = [], discriminantNodeKeys = [], discriminantConfigKeys = []){
   return new Promise( (resolve, reject) => {
     this.getFlowFromId(id)
     .then(flow => {
@@ -199,7 +199,7 @@ Libflows.prototype._addToFlow = function(id, label, nodes = [], configs = [], di
   })
 }
 
-Libflows.prototype._addNewFlow = function(label = "", nodes = [], configs = []){
+LibFlows.prototype._addNewFlow = function(label = "", nodes = [], configs = []){
   const zid = uuid()
   _nodes = _nodes.map(item => {
     if(item.z){
@@ -236,7 +236,7 @@ Libflows.prototype._addNewFlow = function(label = "", nodes = [], configs = []){
   })
 }
 
-Libflows.isSameNode = function(node, filter){
+LibFlows.isSameNode = function(node, filter){
   const keys = Object.keys(filter)
   var resp = true
   for(var k in keys){
@@ -254,6 +254,6 @@ LibFlows.generateNodeID = function(){
 
 var instance;
 module.exports = function(options) {
-  if(!instance) instance = new Libflows(options);
+  if(!instance) instance = new LibFlows(options);
   return instance;
 }
